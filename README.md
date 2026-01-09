@@ -42,6 +42,8 @@ mkdir -p "$HOME"
 cd "$HOME"
 git clone https://github.com/ikmb/PSC-scDRS.git
 cd PSC-scDRS
+wget -O "$HOME/PSC-scDRS/data/HumanLiverHealthyscRNAseqData.zip" \
+  "https://raw.githubusercontent.com/seirana/PSC-scDRS/main/data/HumanLiverHealthyscRNAseqData.zip"
 ```
 
 or re-download
