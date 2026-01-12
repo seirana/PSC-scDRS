@@ -21,8 +21,9 @@ To learn more about the functions, refer to the flowcharts in the [Flowcharts](h
 PSC-scDRS requires significant computational resources. Ensure your system meets the following minimum requirements.<br/>
 System requirements for the sample dataset:<br/>
 &nbsp; 	 - CPU: ≥ 16 cores <br/>
-&nbsp; 	 - Memory: ≥ 32 GB RAM (scDRS may require up to 360 GB depending on dataset size) <br/>
-&nbsp;	 - Storage: ≥ 20 GB free disk space <br/>
+&nbsp; 	 - Memory: ≥ 32 GB RAM (scDRS may require up to 360 GB depending on dataset size), <br/>
+&nbsp;	 - Storage: ≥ 25 GB free disk space, <br/>
+&nbsp;	 - A stable high-speed internet connection for downloading approximately 20 GB of data. <br/>
 
 ** The pipeline with sample files was tested on a Dell XPS 15 9530 workstation running Ubuntu 22.04.5 LTS, equipped with 32 GB of RAM and a 13th-generation Intel® Core™ i9-13900H processor (20 cores).
 
@@ -32,12 +33,7 @@ Note: For large datasets, it is recommended to run the pipeline on a high-perfor
 ### Clone PSC-scDRS
 All the codes and needed files for the sample file will be downloaded in this step.
 
-1) Create a workspace to keep data and files for the PSC-scDRS project.
-```bash   
-mkdir -p "$HOME"
-```
-
-2) Clone if missing,
+Clone data and files for the PSC-scDRS project if missing,
 ```bash
 cd "$HOME"
 git clone https://github.com/ikmb/PSC-scDRS.git
