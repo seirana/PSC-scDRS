@@ -23,7 +23,7 @@ System requirements for the sample dataset:<br/>
 &nbsp; 	 - CPU: ≥ 16 cores <br/>
 &nbsp; 	 - Memory: ≥ 32 GB RAM (scDRS may require up to 360 GB depending on dataset size), <br/>
 &nbsp;	 - Storage: ≥ 50 GB free disk space, <br/>
-&nbsp;	 - A stable high-speed internet connection for downloading approximately 22 GB of data. <br/
+&nbsp;	 - A stable high-speed internet connection for downloading approximately 22 GB of data. <br/>
 
 ** The pipeline with sample files was tested on a Dell XPS 15 9530 workstation running Ubuntu 22.04.5 LTS, equipped with 32 GB of RAM and a 13th-generation Intel® Core™ i9-13900H processor (20 cores).
 
