@@ -29,11 +29,21 @@ System requirements for the sample dataset:<br/>
 
 Note: For large datasets, it is recommended to run the pipeline on a high-performance computing (HPC) system, as the scDRS method may require it, depending on the input files.
 
-## Downloads
+## Download system requirements and repository
+### Download system requirements
+```bash
+sudo apt update
+sudo apt install -y \
+    git \
+    build-essential \
+    wget curl unzip \
+    python3.12 python3.12-venv
+```
+
 ### Clone PSC-scDRS
 All the codes and needed files for the sample file will be downloaded in this step.
 
-Clone data and files for the PSC-scDRS project if missing,
+2) Clone data and files for the PSC-scDRS project if missing,
 ```bash
 cd "$HOME"
 git clone https://github.com/ikmb/PSC-scDRS.git
