@@ -79,7 +79,7 @@ cd ~
 REPO_DIR="$(find . -maxdepth 5 -type f -name setup_dependencies.sh -path '*/PSC-scDRS/*' -print -quit | xargs -r dirname)"
 echo "$REPO_DIR"
 cd "$REPO_DIR"
-bash setup_dependencies.sh
+bash ./setup_dependencies.sh
 
 ```
 ## Data
@@ -93,7 +93,7 @@ cd ~
 REPO_DIR="$(find . -maxdepth 5 -type f -name setup_dependencies.sh -path '*/PSC-scDRS/*' -print -quit | xargs -r dirname)"
 echo "$REPO_DIR"
 cd "$REPO_DIR"
-bash PSC_scDRS_run.sh
+bash ./PSC_scDRS_run.sh
 ```
 
 ** The final results are stored as ./PSC-coDES/output/PSC cell association with Liver.csv
