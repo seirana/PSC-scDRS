@@ -46,21 +46,50 @@ def read_txt(x, split,h):
     return y
 
 def write_txt(x, y, d, h):
+    """
+    x: output path (either with or without .txt)
+    y: pandas DataFrame (or array-like)
+    d: delimiter (e.g., ' ' or '\\t')
+    h: whether to write header
+    """
     import numpy as np
-    import os
+    from pathlib import Path
 
-    p = [j for j in range(len(x)) if x.startswith('/', j)]
-    path = d[0:p[len(p)-1]]
-    # Check whether the specified path exists or not
-    isExist = os.path.exists(path)
-    if not isExist:    
-       # Create a new directory because it does not exist
-        os.makedirs(path)
+    if not isinstance(d, str) or d == "":
+        raise ValueError(f"Delimiter d must be a non-empty string, got: {d!r}")
 
-    if h == True:
-        np.savetxt(x+'.txt', y, fmt='%s', delimiter= d ,newline='\n', header=' '.join(y.columns))
-    else:
-        np.savetxt(x+'.txt', y, fmt='%s', delimiter= d ,newline='\n', header='')
+    # Build output path safely
+    out_path = Path(x)
+    if out_path.suffix != ".txt":
+        out_path = out_path.with_suffix(".txt")
+
+    # Create only the parent directory of the output file
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Convert DataFrame to array for np.savetxt, but keep header from columns
+    header = ""
+    data = y
+
+    try:
+        # If y is a pandas DataFrame
+        cols = list(y.columns)
+        if h:
+            header = d.join(map(str, cols))
+        data = y.to_numpy()
+    except Exception:
+        # If y is not a DataFrame (already array-like)
+        if h:
+            raise ValueError("h=True requires a DataFrame with columns.")
+
+    np.savetxt(
+        str(out_path),
+        data,
+        fmt="%s",
+        delimiter=d,
+        newline="\n",
+        header=header,
+        comments=""  # prevents '#' being added to header
+    )
         
 def read_parquet(x):
     # read partitioned parquet files
