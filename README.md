@@ -45,21 +45,23 @@ All the codes and needed files for the sample file will be downloaded in this st
 
 2) Clone data and files for the PSC-scDRS project if missing,
 ```bash
-cd "$HOME"
 git clone https://github.com/ikmb/PSC-scDRS.git
 cd PSC-scDRS
-wget -O "$HOME/PSC-scDRS/data/HumanLiverHealthyscRNAseqData.zip" \
-"https://github.com/seirana/PSC-scDRS/blob/main/data/HumanLiverHealthyscRNAseqData.zip?raw=1"
+mkdir -p data
+wget -O "data/HumanLiverHealthyscRNAseqData.zip" \
+"https://github.com/seirana/PSC-scDRS/raw/main/data/HumanLiverHealthyscRNAseqData.zip"
+
 ```
 
 or re-download
 ```bash
-rm -rf "$HOME/PSC-scDRS"
-cd "$HOME"
+BASE_DIR="$(pwd)"
+rm -rf "$BASE_DIR/PSC-scDRS"
 git clone https://github.com/ikmb/PSC-scDRS.git
 cd PSC-scDRS
-wget -O "$HOME/PSC-scDRS/data/HumanLiverHealthyscRNAseqData.zip" \
-"https://github.com/seirana/PSC-scDRS/blob/main/data/HumanLiverHealthyscRNAseqData.zip?raw=1"
+mkdir -p data
+wget -O "data/HumanLiverHealthyscRNAseqData.zip" \
+"https://github.com/seirana/PSC-scDRS/raw/main/data/HumanLiverHealthyscRNAseqData.zip"
 ```
 
 ## Installing dependencies
@@ -73,8 +75,12 @@ Pipeline will install it. If there is a problem, check [here](https://cncr.nl/re
 
 #### This command installs Python libraries, scDRS, bcftools, and MAGMA.
 ```bash
-cd "$HOME/PSC-scDRS"
+cd ~
+REPO_DIR="$(find . -maxdepth 5 -type f -name setup_dependencies.sh -path '*/PSC-scDRS/*' -print -quit | xargs -r dirname)"
+echo "$REPO_DIR"
+cd "$REPO_DIR"
 bash setup_dependencies.sh
+
 ```
 ## Data
 Summary statistics for the GAISE single-marker test on PSC whole-exome sequencing data are available in the sampleWES.zip file. <br/>
@@ -83,6 +89,11 @@ The single-cell RNA sequencing data from the healthy human liver in the study by
 ## Running PSC-scDRS
 The pipeline will run the code smoothly.
 ```bash
-cd "$HOME/PSC-scDRS"
+cd ~
+REPO_DIR="$(find . -maxdepth 5 -type f -name setup_dependencies.sh -path '*/PSC-scDRS/*' -print -quit | xargs -r dirname)"
+echo "$REPO_DIR"
+cd "$REPO_DIR"
 bash PSC_scDRS_run.sh
 ```
+
+** The final results are stored as ./PSC-coDES/output/PSC cell association with Liver.csv
