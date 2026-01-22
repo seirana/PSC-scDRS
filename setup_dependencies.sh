@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -49,6 +48,9 @@ cd "$SCRIPT_DIR"
 ENV_NAME="pythonENV"
 VENV_PATH="$SCRIPT_DIR/$ENV_NAME"
 
+mkdir -p "$SCRIPT_DIR/output/logs"
+PIP_LOG="$SCRIPT_DIR/output/logs/pip_install.log"
+
 if [ ! -d "$VENV_PATH" ]; then
   echo ">>> Creating Python virtual environment ($ENV_NAME)"
   python3 -m venv "$VENV_PATH"
@@ -68,17 +70,68 @@ source "$VENV_PATH/bin/activate"
 
 REQ_FILE="$SCRIPT_DIR/env/requirements.txt"
 echo ">>> Installing Python dependencies from $REQ_FILE"
+echo ">>> Logging pip output to: $PIP_LOG"
 
 if [ ! -f "$REQ_FILE" ]; then
   echo "requirements.txt not found at $REQ_FILE"
   exit 1
 fi
 
-python3 -m pip install --upgrade pip
-python3 -m pip install -r "$REQ_FILE"
+# Always use the venv python explicitly (avoids PATH confusion)
+PYTHON="$VENV_PATH/bin/python"
+
+echo ">>> Using: $PYTHON"
+"$PYTHON" -V
+
+# Upgrade packaging tools (important for reliability)
+"$PYTHON" -m pip install --upgrade pip setuptools wheel 2>&1 | tee "$PIP_LOG"
+
+# Install requirements
+"$PYTHON" -m pip install --no-cache-dir -r "$REQ_FILE" 2>&1 | tee -a "$PIP_LOG"
+
+# --------------------------
+# 1b) scDRS (repo-local, editable install)
+# --------------------------
+SCDRS_DIR="$SCRIPT_DIR/scDRS"
+SCDRS_REPO="https://github.com/martinjzhang/scDRS.git"
 
 echo
-echo ">>> Python environment ready."
+echo ">>> Setting up scDRS (repo-local, editable install)"
+
+# Clone scDRS if not present; otherwise update
+if [[ ! -d "$SCDRS_DIR/.git" ]]; then
+  echo ">>> Cloning scDRS into: $SCDRS_DIR"
+  git clone "$SCDRS_REPO" "$SCDRS_DIR"
+else
+  echo ">>> scDRS already present, updating"
+  git -C "$SCDRS_DIR" pull --ff-only
+fi
+
+# Install scDRS in editable mode inside the venv
+echo ">>> Installing scDRS in editable mode (pip install -e ./scDRS)"
+"$PYTHON" -m pip install -e "$SCDRS_DIR" 2>&1 | tee -a "$PIP_LOG"
+
+# Hard verification: ensure THIS scDRS is imported from repo-local path
+echo ">>> Verifying scDRS import source"
+"$PYTHON" - <<'PYEOF' 2>&1 | tee -a "$PIP_LOG"
+import os
+import scdrs
+print("OK: scDRS imported")
+print("scDRS location:", scdrs.__file__)
+
+repo_scdrs = os.path.realpath("./scDRS")
+loaded = os.path.realpath(scdrs.__file__)
+
+if not loaded.startswith(repo_scdrs):
+    raise SystemExit(
+        "ERROR: scDRS is NOT imported from repo-local ./scDRS.\n"
+        f"Expected prefix: {repo_scdrs}\n"
+        f"Loaded from:     {loaded}\n"
+        "Fix: remove any conflicting scdrs installs and rerun setup_dependencies.sh"
+    )
+PYEOF
+
+echo ">>> scDRS ready (repo-local)"
 echo
 
 # --------------------------
