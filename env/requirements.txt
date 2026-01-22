@@ -11,4 +11,3 @@ scanpy
 numpy
 scipy
 gdown
-scdrs
