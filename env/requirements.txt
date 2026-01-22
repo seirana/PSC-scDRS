@@ -11,3 +11,4 @@ scanpy
 numpy
 scipy
 gdown
+sympy
